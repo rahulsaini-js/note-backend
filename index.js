@@ -11,26 +11,27 @@ const Note = require("./models/note.model");
 mongoose.connect(process.env.connection_string);
 const app = express();
 
-
 app.use(express.json());
 
 const corsOptions = {
-  origin: 'https://frontend-three-delta-89.vercel.app/',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "Access-Control-Allow-Methods",
+    "Access-Control-Allow-Origin",
+  ],
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 
+app.options("*", cors(corsOptions)); // Enable pre-flight for all routes
 
-app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
-
-
-app.post('/', (req, res) => {
-  res.json({ message: 'Login successful' });
+app.post("/", (req, res) => {
+  res.json({ message: "Login successful" });
 });
-
-
 
 // Create Account
 app.post("/create-account", async (req, res) => {
@@ -289,8 +290,8 @@ app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
 
 // Search Notes
 app.get("/search-notes", authenticateToken, async (req, res) => {
-  const {user} = req.user;
-  const {query} = req.query;
+  const { user } = req.user;
+  const { query } = req.query;
 
   if (!query) {
     return res
@@ -319,8 +320,6 @@ app.get("/search-notes", authenticateToken, async (req, res) => {
     });
   }
 });
-
-
 
 app.listen(8000);
 module.exports = app;
