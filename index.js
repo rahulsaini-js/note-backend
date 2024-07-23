@@ -13,14 +13,24 @@ const app = express();
 
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-app.get("/", (req, res) => {
-  res.json({ data: "hello" });
+
+const corsOptions = {
+  origin: 'https://frontend-three-delta-89.vercel.app/',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+
+app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+
+
+app.post('/', (req, res) => {
+  res.json({ message: 'Login successful' });
 });
+
+
 
 // Create Account
 app.post("/create-account", async (req, res) => {
